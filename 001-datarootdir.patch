@@ -1,0 +1,59 @@
+diff --git a/meson.build b/meson.build
+index c8ee42fd..c87b3810 100644
+--- a/meson.build
++++ b/meson.build
+@@ -24,7 +24,7 @@ ROOTDIR = get_option('root-dir')
+ BINDIR = join_paths(PREFIX, get_option('bindir'))
+ MANDIR = join_paths(PREFIX, get_option('mandir'))
+ BUILDSCRIPT = get_option('buildscript')
+-LIBMAKEPKGDIR = join_paths(PREFIX, DATAROOTDIR, 'makepkg')
++LIBMAKEPKGDIR = join_paths(PREFIX, get_option('datadir'), 'makepkg')
+ PKGDATADIR = join_paths(PREFIX, DATAROOTDIR, meson.project_name())
+ KEYRINGDIR = join_paths(PREFIX, DATAROOTDIR, get_option('keyringdir'))
+ 
+@@ -46,7 +46,7 @@ bashcompletion = dependency('bash-completion', required : false)
+ if bashcompletion.found()
+   BASHCOMPDIR = bashcompletion.get_variable(pkgconfig: 'completionsdir')
+ else
+-  BASHCOMPDIR = join_paths(DATAROOTDIR, 'bash-completion/completions')
++  BASHCOMPDIR = join_paths(get_option('datadir'), 'bash-completion/completions')
+ endif
+ 
+ if get_option('use-git-version')
+@@ -412,12 +412,12 @@ install_data(
+   'proto/PKGBUILD-vcs.proto',
+   'proto/PKGBUILD.proto',
+   'proto/proto.install',
+-  install_dir : join_paths(DATAROOTDIR, 'pacman'))
++  install_dir : join_paths(get_option('datadir'), 'pacman'))
+ 
+ foreach path : [
+ 	join_paths(LOCALSTATEDIR, 'lib/pacman/'),
+ 	join_paths(LOCALSTATEDIR, 'cache/pacman/pkg/'),
+-	join_paths(DATAROOTDIR, 'makepkg-template/'),
++	join_paths(get_option('datadir'), 'makepkg-template/'),
+ 	join_paths(DATAROOTDIR, 'libalpm/hooks/'),
+ 	]
+ 	meson.add_install_script('sh', '-c', 'mkdir -p "$DESTDIR/@0@"'.format(path))
+diff --git a/scripts/meson.build b/scripts/meson.build
+index e5b9ff4a..6e9b425b 100644
+--- a/scripts/meson.build
++++ b/scripts/meson.build
+@@ -66,7 +66,7 @@ configure_file(
+ 	configuration : { 'libmakepkgdir': LIBMAKEPKGDIR, 'PACKAGE_VERSION': PACKAGE_VERSION },
+ 	input : 'libmakepkg.pc.in',
+ 	output : '@BASENAME@',
+-	install_dir : join_paths(DATAROOTDIR, 'pkgconfig'))
++	install_dir : join_paths(get_option('datadir'), 'pkgconfig'))
+ 
+ custom_target(
+   'bash_completion',
+@@ -82,7 +82,7 @@ foreach symlink : ['pacman-key', 'makepkg']
+                            join_paths(BASHCOMPDIR, symlink))
+ endforeach
+ 
+-zsh_completion_dir = join_paths(DATAROOTDIR, 'zsh/site-functions')
++zsh_completion_dir = join_paths(get_option('datadir'), 'zsh/site-functions')
+ custom_target(
+   'zsh_completion',
+   command : [ SCRIPT_EDITOR, '@INPUT@', '@OUTPUT@' ],
