@@ -24,7 +24,7 @@ ROOTDIR = get_option('root-dir')
 BINDIR = join_paths(PREFIX, get_option('bindir'))
 MANDIR = join_paths(PREFIX, get_option('mandir'))
 BUILDSCRIPT = get_option('buildscript')
-LIBMAKEPKGDIR = join_paths(PREFIX, DATAROOTDIR, 'makepkg')
+LIBMAKEPKGDIR = join_paths(PREFIX, get_option('datadir'), 'makepkg')
 PKGDATADIR = join_paths(PREFIX, DATAROOTDIR, meson.project_name())
 KEYRINGDIR = join_paths(PREFIX, DATAROOTDIR, get_option('keyringdir'))
 
@@ -46,7 +46,7 @@ bashcompletion = dependency('bash-completion', required : false)
 if bashcompletion.found()
   BASHCOMPDIR = bashcompletion.get_variable(pkgconfig: 'completionsdir')
 else
-  BASHCOMPDIR = join_paths(DATAROOTDIR, 'bash-completion/completions')
+  BASHCOMPDIR = join_paths(get_option('datadir'), 'bash-completion/completions')
 endif
 
 if get_option('use-git-version')
@@ -412,12 +412,12 @@ install_data(
   'proto/PKGBUILD-vcs.proto',
   'proto/PKGBUILD.proto',
   'proto/proto.install',
-  install_dir : join_paths(DATAROOTDIR, 'pacman'))
+  install_dir : join_paths(get_option('datadir'), 'pacman'))
 
 foreach path : [
 	join_paths(LOCALSTATEDIR, 'lib/pacman/'),
 	join_paths(LOCALSTATEDIR, 'cache/pacman/pkg/'),
-	join_paths(DATAROOTDIR, 'makepkg-template/'),
+	join_paths(get_option('datadir'), 'makepkg-template/'),
 	join_paths(DATAROOTDIR, 'libalpm/hooks/'),
 	]
 	meson.add_install_script('sh', '-c', 'mkdir -p "$DESTDIR/@0@"'.format(path))

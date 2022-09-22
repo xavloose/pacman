@@ -66,7 +66,7 @@ configure_file(
 	configuration : { 'libmakepkgdir': LIBMAKEPKGDIR, 'PACKAGE_VERSION': PACKAGE_VERSION },
 	input : 'libmakepkg.pc.in',
 	output : '@BASENAME@',
-	install_dir : join_paths(DATAROOTDIR, 'pkgconfig'))
+	install_dir : join_paths(get_option('datadir'), 'pkgconfig'))
 
 custom_target(
   'bash_completion',
@@ -82,7 +82,7 @@ foreach symlink : ['pacman-key', 'makepkg']
                            join_paths(BASHCOMPDIR, symlink))
 endforeach
 
-zsh_completion_dir = join_paths(DATAROOTDIR, 'zsh/site-functions')
+zsh_completion_dir = join_paths(get_option('datadir'), 'zsh/site-functions')
 custom_target(
   'zsh_completion',
   command : [ SCRIPT_EDITOR, '@INPUT@', '@OUTPUT@' ],
